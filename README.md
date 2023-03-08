@@ -21,7 +21,6 @@ def startIdleTimeoutFinal(self,idleHours=1,paramObj={}):
 			WHOLEINTERVALS = math.floor(INTERVALS)
 			LASTINTERVAL = RESTSECONDS * (INTERVALS%1)
 			# RESTSECONDS = RESTMINUTES * 60
-			
 			# last = time.perf_counter()
 			# prevRes = [{'':1}]
 			# FIRST = TRUE
