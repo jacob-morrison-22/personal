@@ -1,6 +1,6 @@
 # Dora Explainer
 At Galen Healthcare my job was to take Clinical and Practice Management data from legacy EMR systems like Meditech Magic and Allscripts Touchworks. This data was very complex in that the schemas were incredibly messy and the size was pretty big, with some systems being over 20 TB. While a large portion of the work for an unknown system was looking at the legacy application and using SQL to locate the data in the legacy database to map to Galen’s schema, once a system was “known” the tasks necessary to archive it became fairly repetitive. The ELT process we used was run in an Azure Data Warehouse that could be fairly costly when run with unnecessary resources. With myself and my fellow coworkers in mind as customers, I created an application using Python/Flask called DORA (Database Object Recognition Assistant) because it started out as a tool to help with the initial discovery phase of the project and it was my little sister’s favorite show growing up. It eventually grew to help encompass all parts of the process through automation and . I did this all on my own, with very little input other than new features that could be added, though I mostly did that on my own as well. Some features include:
-<details><summary>Full text keyword search for initial data discovery</summary>
+<details><summary>Full text keyword search for initial data discovery - Example included</summary>
 <pre>
 numDoneTimeStartDict = {}
 class KeywordFinder:
@@ -83,7 +83,7 @@ VALUES ('{}', '{}', '{}', '{}, '{}','{}', '{}')
 </pre>
 </details>
 
-<details><summary>Managing Azure resources so they were running at the proper scale and would turn off if idle
+<details><summary>Managing Azure resources so they were running at the proper scale and would turn off if idle - Example included
 </summary>
 <pre>
 class AzureManager:
@@ -341,7 +341,7 @@ class AzureManager:
 </pre>
 </details>
 
-<details><summary>Updating configuration settings for orchestration of load scripts</summary>
+<details><summary>Updating configuration settings for orchestration of load scripts  - Example included</summary>
 <pre>
 def getFormDictsByTask(taskDict,jobID,defDict={}):
 
