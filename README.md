@@ -1,9 +1,9 @@
 # personal
 
 <details><summary>Test</summary>
-<code>
+<samp>
 Collapsible Content
-  </code>
+  </samp>
 </details>
 
 ```
