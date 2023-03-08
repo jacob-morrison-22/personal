@@ -1,5 +1,6 @@
 # Dora Explainer
 At Galen Healthcare my job was to take Clinical and Practice Management data from legacy EMR systems like Meditech Magic and Allscripts Touchworks. This data was very complex in that the schemas were incredibly messy and the size was pretty big, with some systems being over 20 TB. While a large portion of the work for an unknown system was looking at the legacy application and using SQL to locate the data in the legacy database to map to Galen’s schema, once a system was “known” the tasks necessary to archive it became fairly repetitive. The ELT process we used was run in an Azure Data Warehouse that could be fairly costly when run with unnecessary resources. With myself and my fellow coworkers in mind as customers, I created an application using Python/Flask called DORA (Database Object Recognition Assistant) because it started out as a tool to help with the initial discovery phase of the project and it was my little sister’s favorite show growing up. It eventually grew to help encompass all parts of the process through automation and . I did this all on my own, with very little input other than new features that could be added, though I mostly did that on my own as well. Some features include:
+
 <details><summary>Full text keyword search for initial data discovery - Example included</summary>
 <pre>
 numDoneTimeStartDict = {}
@@ -548,4 +549,16 @@ def getItemCounts (self, crsr, selectStatement, cteDict,variables, fn=''):
 		file.write(sqlstring)
 		file.close ()
 	return total
+				
+</pre>
+</details>
+				
+Some things that I would do differently given more resources and my current experience:
+1. Use Django (Especially ORM) did not see the power of an ORM when I started building dora so I bascially built my own functions to interact with the database. It was a good learning experience but would never do it again.
+2. Take time to refactor. After code was written and functional, I rarely had time to go back and refactor unless something broke or was performing too slowly
+3. Break things down into smaller functions. Most of the functions i wrote are way too many lines of code, goes back to the lack to code review and time to refactor
+4. Use of more classes as opposed to dictionaries for passing data between interfaces
+5. The application ran on a local machine or customer VM, ideally would have used [Azure](https://learn.microsoft.com/en-us/azure/app-service/quickstart-python?tabs=flask%2Cwindows%2Cazure-cli%2Cvscode-deploy%2Cdeploy-instructions-azportal%2Cterminal-bash%2Cdeploy-instructions-zip-azcli 
+) so it would live where the data was being transformed and run more performantly, with less setup from end users
+			
 
