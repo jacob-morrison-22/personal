@@ -1,7 +1,7 @@
 # personal
 
 <details><summary>Test</summary>
-<samp>
+<code>
 def startIdleTimeoutFinal(self,idleHours=1,paramObj={}):
 		IGNOREQUERIES = ['select @@spid;','use[{}]'.format(co.database),'begin tran', 'rollback','select getdate() as dt', 'select *\nfrom [etl_dbo].[job]']
 		archieQueries = ["List of queries to ignore because they are run by Archie"]
@@ -157,7 +157,7 @@ def startIdleTimeoutFinal(self,idleHours=1,paramObj={}):
 				idleStatus = 'Server has been scaled down and paused\n Timer Updated: {}'.format(startDate,datetime.datetime.now())
 				co.runStringQuery(azdb,"UPDATE AzureConfiguration SET IdleTimerUpdateDttm='{}', IdleTimerStatus='{}' {}".format(datetime.datetime.now(),idleStatus,co.cusExtWhere))
 				self.IdleTimerRunning = False
-  </samp>
+  </code>
 </details>
 
 ```
