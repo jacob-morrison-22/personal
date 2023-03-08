@@ -3,7 +3,7 @@ At Galen Healthcare my job was to take Clinical and Practice Management data fro
 <details><summary>Full text keyword search for initial data discovery</summary>
 <pre>
 numDoneTimeStartDict = {}
-class KeywordFindershy
+class KeywordFinder:
 	def findKeywordsByTable(self, cnxnString, sID, kw, noCols, q, thread):
 	global numDoneTimeStartDict 
 	while not q.empty():
