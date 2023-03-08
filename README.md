@@ -86,7 +86,7 @@ VALUES ('{}', '{}', '{}', '{}, '{}','{}', '{}')
 <details><summary>Managing Azure resources so they were running at the proper scale and would turn off if idle
 </summary>
 <pre>
-lass AzureManager:
+class AzureManager:
 	def __init__(self,customer,external,clientid='',keyvault=''):
 		#self.sqllitecnxn = createConnection('azureman.db')
 		co.pullConfiguration(customer,external,clientid,keyvault)
@@ -173,8 +173,6 @@ lass AzureManager:
 	#def getSeriveObjectiveInfo(self):
 
 
-
-# am = AzureManager()
 	def startIdleTimeoutFinal(self,idleHours=1,paramObj={}):
 		IGNOREQUERIES = ['select @@spid;','use[{}]'.format(co.database),'begin tran', 'rollback','select getdate() as dt', 'select *\nfrom [etl_dbo].[job]']
 		archieQueries = ["List of queries to ignore because they are run by Archie"]
