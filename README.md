@@ -528,4 +528,25 @@ if useTable:
 		print (message)
 		resTables += ['title' :baseFile, 'table' :None, 'subtitle': message}]
 
+#Gets count of each segment in a SOL statement and adds up any that are separated by unions, returns total count @classmethod
+def getItemCounts (self, crsr, selectStatement, cteDict,variables, fn=''):
+	try:
+		segs = ps.splitSelSegments (selectStatement)
+	except:
+		print (selectStatement)
+		segs = []
+	total = 0
+	sqlStringList = [1
+	for seg in segs:
+		segDict = ps.cleanSegment(seg)
+		segCount, segStr = ps.getSegCount(crsr, segDict, cteDict, variables)
+		total += segCount
+		segStr = re.sub('[\n]+', '\n' , segStr)
+		sqlStringList.append(segStr)
+	sqlstring = variables + '\n UNION \n'. join(sqlstringList)
+	if fn:
+		file = open (fn, 'w')
+		file.write(sqlstring)
+		file.close ()
+	return total
 
