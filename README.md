@@ -5,3 +5,7 @@
 Collapsible Content
 ```
 </details>
+
+```
+Collapsible Content2
+```
