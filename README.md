@@ -485,7 +485,7 @@ def createitinerary():
 </pre>
 </details>
 	
-<details><summary>Automating effort to get expected counts from sql scripts and comparing it to final counts in cloud application for chain of custody</summary>
+<details><summary>Automating effort to get expected counts from sql scripts and comparing it to final counts in cloud application for chain of custody -  Example Included</summary>
 <pre>				
 if useTable:
 	print('\nChecking Chain of Custody for file: {}'.format(file))
@@ -528,7 +528,6 @@ if useTable:
 		print (message)
 		resTables += ['title' :baseFile, 'table' :None, 'subtitle': message}]
 
-#Gets count of each segment in a SOL statement and adds up any that are separated by unions, returns total count @classmethod
 def getItemCounts (self, crsr, selectStatement, cteDict,variables, fn=''):
 	try:
 		segs = ps.splitSelSegments (selectStatement)
@@ -536,7 +535,7 @@ def getItemCounts (self, crsr, selectStatement, cteDict,variables, fn=''):
 		print (selectStatement)
 		segs = []
 	total = 0
-	sqlStringList = [1
+	sqlStringList = []
 	for seg in segs:
 		segDict = ps.cleanSegment(seg)
 		segCount, segStr = ps.getSegCount(crsr, segDict, cteDict, variables)
