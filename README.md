@@ -484,5 +484,48 @@ def createitinerary():
 <pre>
 </pre>
 </details>
+	
+<details><summary>Automating effort to get expected counts from sql scripts and comparing it to final counts in cloud application for chain of custody</summary>
+<pre>				
+if useTable:
+	print('\nChecking Chain of Custody for file: {}'.format(file))
+	delete = sqlDict.get('delete','')
+	whereSplit = re.split( 'WHERE', delete, flags=re. IGNORECASE)
+	whereStr =
+	if len(whereSplit) › 1:
+		whereStr 'WHERE ' + whereSplit[1]
+	archCountSQL = 'SELECT COUNT (*) FROM {} {}' .format(fullTable, wherestr)
+	print(archCountSQL.strip()‚end=': ')
+	archCount = list(cursor .execute(archCountSQL))[0][0]
+	print(archCount)
+	diff = None
+	sourceCount = None
+	if not archieOnly:
+		ouputFilename = os.path.join(SQLFoldPath, 'Count For '+baseFile)
+		cDict = cteDict['dict']
+	
+		if co. SOLTYPE == 'Warehouse':
+			if cDict:
+				print('Creating {} Temp Table (s)'.format(len(cDict)))
+
+
+				try:
+					runStringQuery(co.ARCHIECNXNSTRING, sqlDict['drop' ]['string'],ret=False, useCurs=False)
+					runStringQuery(co.ARCHIECNXNSTRING, cteDict[ 'string'], ret=False , useCurs=False) 
+				except Exception as e:
+					print(e)
+			cDict = {}
+		print('Getting counts from each segment in file:' ‚end=' ')
+		sourceCount = self.getItemCounts (cursor, select, cDict, variables, ouputFilename)
+		print(sourceCount)
+		diff = sourceCount - archCount print('Difference: '‚diff)
+		
+		retDict = [{'CheckTime':str(runTime)[:19], 'CheckID' :runID, 'FromFile': file, 'TableName' : table, 'SchemaName' : schema, 'ArchieDatabase':co.ARCHIEDATABASE, 'SourceCount': sourceCount, 'ArchieCount' : archCount, 'Difference': diff, 'WhereString' :whereStr}]
+		resTables += [{'title':basefile, 'table' :retDict, 'subtitle':message}] 
+		insertTableDict(co.ARCHIECNXNSTRING, retDict, 'ChainofCustody' ‚sch='dora')
+	else:
+		message = 'No Archie Table found for file {} in the script or filename. Filenames should look like "ItemSchema.ItemName - ItemSubType.sql"'.format(file)
+		print (message)
+		resTables += ['title' :baseFile, 'table' :None, 'subtitle': message}]
 
 
