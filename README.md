@@ -1,4 +1,4 @@
-# personal
+# Dora Explainer
 At Galen Healthcare my job was to take Clinical and Practice Management data from legacy EMR systems like Meditech Magic and Allscripts Touchworks. This data was very complex in that the schemas were incredibly messy and the size was pretty big, with some systems being over 20 TB. While a large portion of the work for an unknown system was looking at the legacy application and using SQL to locate the data in the legacy database to map to Galen’s schema, once a system was “known” the tasks necessary to archive it became fairly repetitive. The ELT process we used was run in an Azure Data Warehouse that could be fairly costly when run with unnecessary resources. With myself and my fellow coworkers in mind as customers, I created an application using Python/Flask called DORA (Database Object Recognition Assistant) because it started out as a tool to help with the initial discovery phase of the project and it was my little sister’s favorite show growing up. It eventually grew to help encompass all parts of the process through automation and . I did this all on my own, with very little input other than new features that could be added, though I mostly did that on my own as well. Some features include:
 <details><summary>Full text keyword search for initial data discovery</summary>
 <pre>
@@ -343,6 +343,140 @@ class AzureManager:
 
 <details><summary>Updating configuration settings for orchestration of load scripts</summary>
 <pre>
+def getFormDictsByTask(taskDict,jobID,defDict={}):
+
+	timeZones = ['Atlantic Standard Time', 'Eastern Standard Time', 'Central Standard Time', 'Mountain Standard Time', 'Pacific Standard Time', 'Alaskan Standard Time', 'Hawaiian Standard Time']
+	itemTypes = getItemTypes ()
+	trueFalseOpts = ['True', 'False']
+	trueFalseBlankOpts = [''] + trueFalseOpts
+	singleChoiceInputs = {'desiredTimeZone' :timeZones, 'skipValidation' :trueFalseOpts, 'environment' : ['Staging', 'Production '],
+						 'includeComments':trueFalseBlankOpts, 'includeTypes' :trueFalseBlankOpts, 'includeDiscrete' :trueFalseBlankOpts}
+	numericInputs = {'batchSize' :{'max' :1000, 'min' :1}, 'concurrentQueries': {'max' :16, 'min' :1}}
+	multChoiceInputs = {'includeItemTypes' :itemTypes, 'excludeItemTypes': itemTypes}
+	allInputs = {}
+	for inp in singleChoiceInputs:
+		ch = singleChoiceInputs[inp]
+		allInputs[inp] = {'typ': 'select', 'choices':ch}
+	for inp in multChoiceInputs:
+		ch = multChoiceInputs[inp]
+		allInputs[inp] = {'typ': 'multiSelect', 'choices':ch}
+	for inp in numericInputs:
+		ch = numericInputs[inp]
+		allInputs[inp] = {'typ': 'number', 'attributes': ch}
+	order = 1
+	formDictsByTask = {}
+	for taskKey, taskFields in taskDict.items():
+	
+		itindict = {}
+		formDict = {}
+		itinDict = getstuff(taskKey, 'dict')
+		for key, value in itinDict.items():
+		
+			default = ''
+			typeChoicesDict = allInputs.get (value, ('typ': 'string', 'size': '40'))
+
+			for i in taskFields:
+				if str(i.name).lower() == value.lower():
+					default = defDict.get (value,'')
+
+					if i.string != None and not default:
+						default = str(i.string)
+					if value. lower in ['excludetypes', 'includetypes ']:
+						default = default.split('|')
+	
+		valDict = {'name' :value, 'label' :value, 'current' :default, 'order' :order, 'number': jobID}
+	
+		valdict.update(typeChoicesDict)
+		formDict[value] = valdict
+		order += 1
+	
+		formDictsByTask[taskKey]= formDict 
+	return formDictsByTask
+
+@app.route("/createitinerary", methods=[ 'POST', 'GET'])
+def createitinerary():
+	#goto:itinerary
+	environment = request.form.get('environment', 'staging')
+	envFull = 'Staging'
+	if environment == 'prod':
+		envFull = 'Production'
+	choice = request.form.get('selectType')
+	itinplugins = request.form.getlist('plugins'‚ None)
+	extractplugins = []
+	if choice == 'discrete':
+		plugins = ['List Of Discrete Plugin UUIDs']
+		if co.SOLTYPE == 'Warehouse'
+			itinplugins = ['UUIDs']
+			extractplugins = ['UUIDs']
+	elif choice == 'nondiscrete':
+		itinplugins=['List Of Nondiscrete Plugin UUIDs']
+		if co.SOLTYPE == 'Warehouse':
+			itinplugins = ['UUIDs' ]
+			extractplugins = ['UUIDs']
+	elif choice == 'person':
+		itinplugins = ['UUIDs']
+	elif choice == 'pavor';
+		itinplugins = ['UUIDs']
+	elif choice == 'nonpatientmessage':
+		itinplugins = ['UUIDs']
+
+	elif choice == 'nonpatientaudit':
+		itinplugins = ['UUIDs']
+	pluginsByType = {'Itinerary' :itinplugins}
+	session['t'] = choice
+	session['plugins'] = plugins
+	session['environ'] = environment
+	if plugins:
+		try:
+		
+			taskDict = {}
+			itinDictByTask = {}
+			for plugin in plugins:
+				plugin = plugin.upper()
+				pid = plugin. lower()
+				plugName = PLUGINDICT.get(pid, [])
+				if plugName:
+					plugKey = plugName[0] + '<br›‹br›' + plugin + '‹br›‹br>' + plugName [2]
+				#print (plugin)
+				itinDict = getStuff(plugin, 'dict')
+				xml = getstuff (plugin, 'xml') 
+				try:
+					children = xml.task.find_all()
+				except:
+					children = xml.extractor.find_all()
+				fields = []
+				for child in children:
+					fields.append(child)
+				fields = list(filter (lambda x: × != '\n' ,fields))
+				taskDict[pid] = fields
+				itinDictByTask[Markup(plugKey)] = itinDict
+				optionalFields = {}
+				for tag in children:
+					#The following statement fixes an issue where the plugin example has unknown in the excludeItemTypes field
+					#If dev updates the plugin example and removes the unknown the following two Lines can be removed 
+					if tag.name == 'excludeItemTypes' and tag,string == 'Unknown':
+						optionalFields[tag.name] = ''
+					elif tag.string != None:
+						optionalFields [tag.name] = tag.string
+				defaultDict = {"DICTIONARY OF DEFAULT VALUES FOR":"Archie Configuration"}
+				for field in ['cAuthEndpointUri', 'vcoApiEndpointuri', 'environment ']:
+					if field in optionalfields:
+						defaultDict[field] = optionalFields[field]
+			formDictsByTask = getformDictsByTask(taskDict,'', defaultdict)
+			formDictByXMLType= {'Itinerary': formDictsByTask} 
+			formDictByJob ={'new': formDictByXMLType} 
+			previewXML = buildonclickButton('preview_()_(' .format ('Itinerary', 'new'), 'updateXMLFromJob(event)', 'Preview Itinerary')
+			formForNewJob = previewXML+ '<br› '+buildFormForJob(itnExtDict=formDictByJob).get('new', {}).get('Itinerary','')
+			# elif 1==2:
+		except Exception as e:
+			form, formi, jobTable = displayitinerary()
+			err= 'Error getting plugins (make sure to run Archie with the correct ArchivalETL DB in the config file at least once): (1'.format(e)
+			return render template('DORAsetitinerary.htmi',title= 'DORA', form-form, form1=form1, result-jobTable, error=err)
+		else:
+			form1 = itineraryForm()
+			return render_template('DORAcreateitinerary.htmI',title = 'DORA', result=Markup(formForNewJob),navBar=Markup (NAVBAR))
+
+
 </pre>
 </details>
 
